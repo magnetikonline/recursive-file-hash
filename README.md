@@ -11,7 +11,7 @@ usage: recursivefilehash.py [-h] [--progress] [--result-file RESULT_FILE]
                             scandir
 
 Recursively walk directory and generate ordered list of file path, filesize
-and SHA1 hash.
+and SHA-1 hash.
 
 positional arguments:
   scandir               source directory for scanning

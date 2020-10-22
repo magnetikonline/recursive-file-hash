@@ -113,7 +113,7 @@ class Console:
 def read_arguments(console: Console):
     # create argument parser
     parser = argparse.ArgumentParser(
-        description="Recursively walk directory and generate ordered list of file path, filesize and SHA1 hash."
+        description="Recursively walk directory and generate ordered list of file path, filesize and SHA-1 hash."
     )
 
     parser.add_argument("scandir", help="source directory for scanning")
