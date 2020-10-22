@@ -225,10 +225,10 @@ def main():
     console = Console()
 
     # read CLI arguments
-    (scan_dir, Console.progress_enabled, result_file_path) = read_arguments(console)
+    scan_dir, Console.progress_enabled, result_file_path = read_arguments(console)
 
     # process scan directory
-    (large_file_size, file_path_hash_list) = process_dir(console, scan_dir)
+    large_file_size, file_path_hash_list = process_dir(console, scan_dir)
 
     # generate results
     generate_result(console, result_file_path, large_file_size, file_path_hash_list)
