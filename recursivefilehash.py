@@ -152,12 +152,9 @@ def process_dir(console: Console, scan_dir: str):
     # walk starting `scan_dir`
     for dir_path, _, file_list in os.walk(scan_dir):
         for file_path in file_list:
-            # build full path to next file
+            # build full path to next file and get filesize
             file_path = os.path.join(dir_path, file_path)
-
-            # get filesize
-            file_stat = os.stat(file_path)
-            file_size = file_stat.st_size
+            file_size = os.path.getsize(file_path)
 
             # keep track of largest filesize seen
             if file_size > large_file_size:
