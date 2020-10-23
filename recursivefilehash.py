@@ -150,32 +150,30 @@ def process_dir(
     console: Console, scan_dir: str
 ) -> Tuple[int, List[Tuple[str, int, str]]]:
     file_path_hash_list = []
-    large_file_size = 0
+    large_filesize = 0
 
     # walk starting `scan_dir`
     for dir_path, _, file_list in os.walk(scan_dir):
         for file_path in file_list:
             # build full path to next file and get filesize
             file_path = os.path.join(dir_path, file_path)
-            file_size = os.path.getsize(file_path)
+            filesize = os.path.getsize(file_path)
 
             # keep track of largest filesize seen
-            if file_size > large_file_size:
-                large_file_size = file_size
+            if filesize > large_filesize:
+                large_filesize = filesize
 
             # SHA-1 hash file
             # note: no hashing for a zero length file
-            file_hash = (
-                HASH_ZERO_FILE if (file_size == 0) else file_sha1_hash(file_path)
-            )
+            file_hash = HASH_ZERO_FILE if (filesize == 0) else file_sha1_hash(file_path)
 
             # add completed item to list
-            file_path_hash_list.append((file_path, file_size, file_hash))
+            file_path_hash_list.append((file_path, filesize, file_hash))
             console.progress(f"{file_path} [{file_hash}]")
 
     # sort list by full file path and return
     file_path_hash_list.sort(key=lambda item: item[0])
-    return (large_file_size, file_path_hash_list)
+    return (large_filesize, file_path_hash_list)
 
 
 def file_sha1_hash(path: str) -> str:
@@ -193,19 +191,19 @@ def file_sha1_hash(path: str) -> str:
 def generate_result(
     console: Console,
     result_file_path: str,
-    high_file_size: int,
+    high_filesize: int,
     file_path_hash_list: list,
 ) -> None:
     # determine string length of highest filesize to justify result lines
-    file_size_pad = len(str(high_file_size))
+    filesize_pad = len(str(high_filesize))
 
     fh = None
     if result_file_path is not None:
         # write results to file
         fh = open(result_file_path, "w")
 
-    for (file_path, file_size, file_hash) in file_path_hash_list:
-        result_line = f"{file_hash}\t{str(file_size).rjust(file_size_pad)}\t{file_path}"
+    for (file_path, filesize, file_hash) in file_path_hash_list:
+        result_line = f"{file_hash}\t{str(filesize).rjust(filesize_pad)}\t{file_path}"
 
         if fh is not None:
             # send result to file
@@ -213,9 +211,7 @@ def generate_result(
             continue
 
         # send result to stdout
-        console.write(
-            f"{file_hash}\t{str(file_size).rjust(file_size_pad)}\t{file_path}"
-        )
+        console.write(f"{file_hash}\t{str(filesize).rjust(filesize_pad)}\t{file_path}")
 
     if fh is None:
         # extra linebreak
@@ -231,10 +227,10 @@ def main():
     scan_dir, Console.progress_enabled, result_file_path = read_arguments(console)
 
     # process scan directory
-    large_file_size, file_path_hash_list = process_dir(console, scan_dir)
+    large_filesize, file_path_hash_list = process_dir(console, scan_dir)
 
     # generate results
-    generate_result(console, result_file_path, large_file_size, file_path_hash_list)
+    generate_result(console, result_file_path, large_filesize, file_path_hash_list)
 
     # success
     console.write(f"Finished.\nTotal files: {len(file_path_hash_list)}")
