@@ -6,6 +6,7 @@ import os
 import shutil
 import sys
 import time
+from typing import List, Tuple
 
 HASH_FILE_CHUNK_SIZE = 8192
 HASH_ZERO_FILE = "0" * 40
@@ -28,7 +29,7 @@ class Console:
     _progress_active = False
     _last_term_size = (0, 0, 0)
 
-    def _terminal_size(self):
+    def _terminal_size(self) -> Tuple[int, int]:
         now_timestamp = int(time.time())
 
         if now_timestamp >= (
@@ -39,10 +40,10 @@ class Console:
             Console._last_term_size = (now_timestamp,) + size
             return size
 
-        # return previously stored dimensions
-        return Console._last_term_size[1:]
+        # return previously stored cols and rows
+        return (Console._last_term_size[1], Console._last_term_size[2])
 
-    def _text_truncated(self, text: str, max_length: int):
+    def _text_truncated(self, text: str, max_length: int) -> str:
         if len(text) < max_length:
             # no need for truncation
             return text
@@ -64,11 +65,11 @@ class Console:
             text[0 - split_size :].strip(),
         )
 
-    def _write_flush(self, text: str):
+    def _write_flush(self, text: str) -> None:
         sys.stdout.write(text)
         sys.stdout.flush()
 
-    def _progress_end(self):
+    def _progress_end(self) -> None:
         if not Console._progress_active:
             return
 
@@ -78,16 +79,16 @@ class Console:
             Console.CURSOR_START_LINE_CLEAR_RIGHT + Console.TERM_COLOR.RESET
         )
 
-    def exit_error(self, message: str):
+    def exit_error(self, message: str) -> None:
         self._progress_end()
         print(f"Error: {message}", file=sys.stderr)
         sys.exit(1)
 
-    def write(self, text: str = ""):
+    def write(self, text: str = "") -> None:
         self._progress_end()
         print(text)
 
-    def progress(self, text: str):
+    def progress(self, text: str) -> None:
         # only display if connected to terminal and enabled
         if (not Console.TERMINAL_CONNECTED) or (not Console.progress_enabled):
             return
@@ -110,7 +111,7 @@ class Console:
         self._write_flush("".join(write_list))
 
 
-def read_arguments(console: Console):
+def read_arguments(console: Console) -> Tuple[str, bool, str]:
     # create argument parser
     parser = argparse.ArgumentParser(
         description="Recursively walk directory and generate ordered list of file path, filesize and SHA-1 hash."
@@ -145,7 +146,9 @@ def read_arguments(console: Console):
     return (scan_dir, arg_list.progress, arg_list.result_file)
 
 
-def process_dir(console: Console, scan_dir: str):
+def process_dir(
+    console: Console, scan_dir: str
+) -> Tuple[int, List[Tuple[str, int, str]]]:
     file_path_hash_list = []
     large_file_size = 0
 
@@ -175,7 +178,7 @@ def process_dir(console: Console, scan_dir: str):
     return (large_file_size, file_path_hash_list)
 
 
-def file_sha1_hash(path: str):
+def file_sha1_hash(path: str) -> str:
     hasher = hashlib.sha1()
     fh = open(path, "rb")
     chunk = fh.read(HASH_FILE_CHUNK_SIZE)
@@ -192,7 +195,7 @@ def generate_result(
     result_file_path: str,
     high_file_size: int,
     file_path_hash_list: list,
-):
+) -> None:
     # determine string length of highest filesize to justify result lines
     file_size_pad = len(str(high_file_size))
 
