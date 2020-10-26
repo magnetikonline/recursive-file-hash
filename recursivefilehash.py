@@ -155,9 +155,16 @@ def process_dir(
     # walk starting `scan_dir`
     for dir_path, _, file_list in os.walk(scan_dir):
         for file_path in file_list:
-            # build full path to next file and get filesize
+            # build full path to next file
             file_path = os.path.join(dir_path, file_path)
-            filesize = os.path.getsize(file_path)
+
+            # get filesize of file - if not found (e.g. broken symlink) just silently move along as zero sized file
+            filesize = 0
+            try:
+                filesize = os.path.getsize(file_path)
+            except FileNotFoundError:
+                # move along
+                pass
 
             # keep track of largest filesize seen
             if filesize > large_filesize:
