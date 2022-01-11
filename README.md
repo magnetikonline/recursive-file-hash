@@ -1,4 +1,5 @@
 # Recursive file hash
+
 Python utility to recursively walk a given directory and generate an ordered list of files alongside their filesize and SHA-1 hash.
 
 - [Usage](#usage)
@@ -24,6 +25,7 @@ optional arguments:
 ```
 
 ## Example
+
 Scan directory `/path/to/files`, displaying progress as processing and output results to `/tmp/my-results`:
 
 ```sh
