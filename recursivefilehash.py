@@ -6,7 +6,6 @@ import os
 import shutil
 import sys
 import time
-from typing import List, Tuple
 
 HASH_FILE_CHUNK_SIZE = 8192
 HASH_ZERO_FILE = "0" * 40
@@ -29,7 +28,7 @@ class Console:
     _progress_active = False
     _last_term_size = (0, 0, 0)
 
-    def _terminal_size(self) -> Tuple[int, int]:
+    def _terminal_size(self) -> tuple[int, int]:
         now_timestamp = int(time.time())
 
         if now_timestamp >= (
@@ -111,7 +110,7 @@ class Console:
         self._write_flush("".join(write_list))
 
 
-def read_arguments(console: Console) -> Tuple[str, bool, str]:
+def read_arguments(console: Console) -> tuple[str, bool, str]:
     # create argument parser
     parser = argparse.ArgumentParser(
         description="Recursively walk directory and generate ordered list of file path, filesize and SHA-1 hash."
@@ -148,7 +147,7 @@ def read_arguments(console: Console) -> Tuple[str, bool, str]:
 
 def process_dir(
     console: Console, scan_dir: str
-) -> Tuple[int, List[Tuple[str, int, str]]]:
+) -> tuple[int, list[tuple[str, int, str]]]:
     file_path_hash_list = []
     large_filesize = 0
 
