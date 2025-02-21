@@ -208,7 +208,7 @@ def generate_result(
         # write results to file
         fh = open(result_file_path, "w")
 
-    for (file_path, filesize, file_hash) in file_path_hash_list:
+    for file_path, filesize, file_hash in file_path_hash_list:
         result_line = f"{file_hash}\t{str(filesize).rjust(filesize_pad)}\t{file_path}"
 
         if fh is not None:
