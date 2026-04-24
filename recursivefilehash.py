@@ -64,11 +64,11 @@ class Console:
             text[0 - split_size :].strip(),
         )
 
-    def _write_flush(self, text: str) -> None:
+    def _write_flush(self, text: str):
         sys.stdout.write(text)
         sys.stdout.flush()
 
-    def _progress_end(self) -> None:
+    def _progress_end(self):
         if not Console._progress_active:
             return
 
@@ -78,16 +78,16 @@ class Console:
             Console.CURSOR_START_LINE_CLEAR_RIGHT + Console.TERM_COLOR.RESET
         )
 
-    def exit_error(self, message: str) -> None:
+    def exit_error(self, message: str):
         self._progress_end()
         print(f"Error: {message}", file=sys.stderr)
         sys.exit(1)
 
-    def write(self, text: str = "") -> None:
+    def write(self, text: str = ""):
         self._progress_end()
         print(text)
 
-    def progress(self, text: str) -> None:
+    def progress(self, text: str):
         # only display if connected to terminal and enabled
         if (not Console.TERMINAL_CONNECTED) or (not Console.progress_enabled):
             return
@@ -199,7 +199,7 @@ def generate_result(
     result_file_path: str,
     high_filesize: int,
     file_path_hash_list: list,
-) -> None:
+):
     # determine string length of highest filesize to justify result lines
     filesize_pad = len(str(high_filesize))
 
